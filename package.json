@@ -1,0 +1,26 @@
+{
+  "name": "studly",
+  "version": "1.0-BETA",
+  "description": "",
+  "main": "server.js",
+  "scripts": {},
+  "keywords": [
+    "api",
+    "school",
+    "students",
+    "help",
+    "management",
+    "study",
+    "organize"
+  ],
+  "author": "BrunoGC13",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^2.2.2",
+    "cors": "^2.8.6",
+    "dotenv": "^17.2.4",
+    "express": "^5.2.1",
+    "multer": "^2.0.2",
+    "mysql2": "^3.17.0"
+  }
+}
