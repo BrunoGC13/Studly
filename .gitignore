@@ -3,5 +3,5 @@
 node_modules/
 
 # files
-.gitignore/
+.gitignore
 .env
