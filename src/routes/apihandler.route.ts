@@ -1,6 +1,8 @@
 import Router from "express";
 import v1Handler from "./v1handler.route";
 
-Router().use("/v1", v1Handler);
+const router = Router();
 
-export default Router;
+router.use("/v1", v1Handler);
+
+export default router;

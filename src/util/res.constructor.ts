@@ -1,15 +1,29 @@
-import {Request} from "express";
+import { Request } from "express";
 
-export const resConstructor = (error: boolean, success: boolean, req: Request, msg: String, code: Number) => {
+type ResponseConstructorOptions = {
+    data?: unknown;
+    details?: unknown;
+};
+
+export const resConstructor = (
+    req: Request,
+    error: boolean,
+    success: boolean,
+    msg: string,
+    code: number,
+    options: ResponseConstructorOptions = {},
+) => {
     return {
-        success: success || false,
-        error: error || true,
-        msg: msg || "No message provided!",
-        code: code || 500,
+        success,
+        error,
+        msg,
+        code,
+        ...(options.data !== undefined && { data: options.data }),
+        ...(options.details !== undefined && { details: options.details }),
         call: {
-            method: req.method || "No data provided",
-            endpoint: req.originalUrl || "No data provided"
+            method: req.method || "No method provided",
+            endpoint: req.originalUrl || "No endpoint provided",
         },
-        time: new Date().toISOString()
-    }
-}
+        time: new Date().toISOString(),
+    };
+};

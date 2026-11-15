@@ -1,9 +1,11 @@
 import Router from "express";
+import userController from "../controllers/user.controller";
+const router = Router();
 
-Router().use("/user");
-Router().use("/homework");
-Router().use("/exams");
-Router().use("/subjects");
+router.use("/user", userController);
+// router.use("/homework", homeworkController);
+// router.use("/exams", examsController);
+// router.use("/subjects", subjectsController);
 
-export default Router;
+export default router;
 

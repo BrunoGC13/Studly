@@ -1,43 +1,35 @@
 import express, {Request, response} from "express";
-import https from 'https';
 import cors from 'cors';
-import dotenv from 'dotenv';
-import fs from 'fs';
-import path from 'path';
-
+import helmet from 'helmet';
 import APIHandler from "./routes/apihandler.route";
-import logger from './util/logger';
 import apiLog from "./middleware/log";
 import {errorHandler} from "./middleware/error";
 
-dotenv.config({
-    path: path.resolve(__dirname, './config/.env')
-});
-
-const port: string | number = process.env.PORT || 3000;
-
-const keyPath: string = process.env.PRIVATE_KEY || './privatekey.pem';
-const certPath: string = process.env.PRIVATE_CERT || './cert.pem';
-
-const httpsConfig = {
-    key: fs.readFileSync(path.resolve(__dirname, keyPath)),
-    cert: fs.readFileSync(path.resolve(__dirname, certPath)),
-}
-
 const app = express();
 
-app.use(express.json());
 app.use(cors());
+app.use(express.json());
 app.use(apiLog);
+app.use(express.urlencoded({ extended: true }));
+app.use(helmet())
+
+app.use("/api", APIHandler);
+
+// Add a not-found handler before the general error handler.
+app.use((req, res) => {
+    res.status(404).json({
+        success: false,
+        error: true,
+        msg: "Route not found",
+        code: 404,
+        call: {
+            method: req.method,
+            endpoint: req.originalUrl,
+        },
+        time: new Date().toISOString(),
+    });
+});
+
 app.use(errorHandler);
 
-app.use("/api", APIHandler)
-
-// Start
-if (process.env.NODE_ENV === "production") {
-    https.createServer(httpsConfig, app).listen(port, () => logger.info(`Listening on https://localhost:${port}`));
-} else {
-    app.listen(port, () => {
-        logger.info(`Listening on http://localhost:${port}`);
-    })
-}
+export default app;

@@ -20,11 +20,11 @@ async function verifyConnection(): Promise<void> {
     }
 }
 
-verifyConnection();
+verifyConnection().then();
 
-cron.schedule('* 5 * * *', () => {
-    logger.info(`Schedules database health check running...`);
-    verifyConnection();
+cron.schedule('* 5 * * *', async () => {
+    logger.info(`Scheduled database health check running...`);
+    await verifyConnection();
 });
 
 export default pool;

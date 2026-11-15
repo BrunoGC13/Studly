@@ -11,3 +11,13 @@ yarn-error.log*
 .vscode/*
 
 src/config/.env
+.env
+*.env
+!*.env.example
+
+dist/
+.idea/
+/.idea
+/dist
+/src/config/.env
+testing.http
