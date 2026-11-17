@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { validate } from "../middleware/user.middleware";
+import { validate } from "../middleware/validate.middleware";
 import {UserLoginSchema, UserRegisterSchema} from "../schemas/user.schem";
 import UserService from "../services/user.service";
 import { AppError } from "../util/app.error";

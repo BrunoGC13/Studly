@@ -143,4 +143,6 @@ export = {
     register,
     login,
     verifyMail,
+    getUserByName,
+    getUserById
 }

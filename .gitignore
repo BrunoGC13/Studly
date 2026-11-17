@@ -21,3 +21,4 @@ dist/
 /dist
 /src/config/.env
 testing.http
+testing2.http
