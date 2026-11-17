@@ -41,4 +41,20 @@ router.put("/edit", authenticateToken, validate(SubjectEditSchema), async (req, 
     }));
 })
 
+router.post("/get", authenticateToken, async (req, res) => {
+    if (!req.body) throw new AppError("No body provided!", 400);
+
+    const result = await SubjectService.get(req);
+    return res.status(201).json(resConstructor(
+        req,
+        false,
+        true,
+        "Got subjects",
+        201,
+        {
+            data: result
+        }
+    ))
+});
+
 export default router;

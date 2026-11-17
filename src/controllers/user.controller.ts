@@ -4,7 +4,6 @@ import {UserLoginSchema, UserRegisterSchema} from "../schemas/user.schem";
 import UserService from "../services/user.service";
 import { AppError } from "../util/app.error";
 import { resConstructor } from "../util/res.constructor";
-import {verify} from "jsonwebtoken";
 
 const router = Router();
 

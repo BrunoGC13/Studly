@@ -1,0 +1,1106 @@
+<!-- public/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studly — Stay ahead of your studies</title>
+    <style>
+        :root {
+            --background: #f7f7f5;
+            --surface: #ffffff;
+            --surface-soft: #f0f0ed;
+            --text: #20211f;
+            --muted: #858780;
+            --line: #e7e7e2;
+
+            --accent: #5d665d;
+            --accent-dark: #444c45;
+            --accent-soft: #e8ece7;
+
+            --success: #6d9275;
+            --warning: #a88655;
+            --danger: #ae6b68;
+
+            --shadow: 0 16px 45px rgba(35, 37, 33, .06);
+            --radius: 18px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: var(--background);
+            color: var(--text);
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        button,
+        input {
+            font: inherit;
+        }
+
+        button {
+            border: 0;
+            cursor: pointer;
+        }
+
+        .app {
+            min-height: 100vh;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .auth-screen {
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            padding: 24px;
+            background:
+                    radial-gradient(circle at 15% 15%, rgba(110, 132, 113, .08), transparent 25%),
+                    var(--background);
+        }
+
+        .auth-card {
+            width: min(100%, 430px);
+            padding: 42px;
+            background: rgba(255,255,255,.86);
+            border: 1px solid rgba(255,255,255,.8);
+            border-radius: 30px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(18px);
+            animation: rise .55s ease both;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            font-size: 21px;
+            font-weight: 800;
+            letter-spacing: -.04em;
+        }
+
+        .brand-mark {
+            width: 34px;
+            height: 34px;
+            display: grid;
+            place-items: center;
+            color: white;
+            background: var(--accent);
+            border-radius: 10px;
+            font-size: 17px;
+            font-weight: 800;
+        }
+
+        .auth-card h1 {
+            margin: 42px 0 8px;
+            font-size: 34px;
+            letter-spacing: -.06em;
+        }
+
+        .auth-subtitle {
+            margin: 0 0 30px;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .field {
+            margin-bottom: 17px;
+        }
+
+        .field label {
+            display: block;
+            margin-bottom: 8px;
+            color: #5d6069;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .field input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid var(--line);
+            outline: none;
+            color: var(--text);
+            background: #fafafd;
+            border-radius: 13px;
+            transition: .2s ease;
+        }
+
+        .field input:focus,
+        .field select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(93, 102, 93, .1);
+            background: white;
+        }
+
+        .field select,
+        .field input[type="date"] {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid var(--line);
+            outline: none;
+            color: var(--text);
+            background: #fafaf8;
+            border-radius: 12px;
+            transition: .2s ease;
+        }
+
+        .field select:focus,
+        .field input[type="date"]:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(93, 102, 93, .1);
+            background: white;
+        }
+
+        .primary-button {
+            width: 100%;
+            padding: 15px 18px;
+            color: white;
+            background: var(--accent);
+            border-radius: 12px;
+            font-weight: 750;
+            transition: .2s ease;
+        }
+
+        .primary-button:hover {
+            background: var(--accent-dark);
+            transform: translateY(-1px);
+        }
+
+        .auth-switch {
+            margin: 22px 0 0;
+            color: var(--muted);
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .auth-switch button,
+        .text-button {
+            color: var(--accent);
+        }
+
+        .error-message {
+            margin: 0 0 16px;
+            padding: 11px 13px;
+            color: #a94552;
+            background: #fff0f1;
+            border-radius: 10px;
+            font-size: 13px;
+        }
+
+        .dashboard {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 245px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            padding: 28px 18px;
+            border-right: 1px solid var(--line);
+            background: rgba(255,255,255,.72);
+        }
+
+        .sidebar .brand {
+            padding: 0 12px;
+            margin-bottom: 55px;
+        }
+
+        .nav {
+            display: grid;
+            gap: 7px;
+        }
+
+        .nav button {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            padding: 13px 14px;
+            color: var(--muted);
+            background: transparent;
+            border-radius: 12px;
+            font-weight: 650;
+            text-align: left;
+            transition: .2s ease;
+        }
+
+        .nav button:hover,
+        .nav button.active {
+            color: var(--accent-dark);
+            background: var(--accent-soft);
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-top: 1px solid var(--line);
+        }
+
+        .profile strong {
+            display: block;
+            font-size: 13px;
+        }
+
+        .profile span {
+            display: block;
+            margin-top: 3px;
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .logout {
+            width: 100%;
+            padding: 11px;
+            color: var(--muted);
+            background: transparent;
+            border-radius: 10px;
+            text-align: left;
+        }
+
+        .logout:hover {
+            color: var(--red);
+            background: #fff0f1;
+        }
+
+        .main {
+            width: 100%;
+            max-width: 1430px;
+            padding: 38px 5%;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 38px;
+        }
+
+        .eyebrow {
+            margin: 0 0 8px;
+            color: var(--primary);
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+        }
+
+        .topbar h1 {
+            margin: 0;
+            font-size: clamp(29px, 4vw, 42px);
+            letter-spacing: -.065em;
+        }
+
+        .topbar p {
+            margin: 9px 0 0;
+            color: var(--muted);
+        }
+
+        .date {
+            padding: 12px 16px;
+            color: #666974;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 13px;
+            font-size: 13px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 17px;
+            margin-bottom: 34px;
+        }
+
+        .stat-card,
+        .panel {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            box-shadow: 0 8px 30px rgba(30,30,50,.025);
+        }
+
+        .stat-card {
+            padding: 23px;
+            animation: rise .55s ease both;
+        }
+
+        .stat-card:nth-child(2) { animation-delay: .08s; }
+        .stat-card:nth-child(3) { animation-delay: .16s; }
+
+        .stat-label {
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 650;
+        }
+
+        .stat-value {
+            display: block;
+            margin-top: 13px;
+            font-size: 31px;
+            letter-spacing: -.06em;
+        }
+
+        .stat-note {
+            display: inline-block;
+            margin-top: 9px;
+            color: var(--success);
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1.1fr .9fr;
+            gap: 22px;
+        }
+
+        .panel {
+            padding: 25px;
+            animation: rise .65s ease both;
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 22px;
+        }
+
+        .panel-header h2 {
+            margin: 0;
+            font-size: 18px;
+            letter-spacing: -.035em;
+        }
+
+        .text-button {
+            color: var(--primary);
+            background: transparent;
+            font-size: 13px;
+            font-weight: 750;
+        }
+
+        .subjects {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .subject-card {
+            min-height: 130px;
+            padding: 17px;
+            border-radius: 17px;
+            transition: .2s ease;
+        }
+
+        .subject-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(30,30,50,.08);
+        }
+
+        .subject-icon {
+            width: 31px;
+            height: 31px;
+            display: grid;
+            place-items: center;
+            margin-bottom: 20px;
+            color: white;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .subject-card h3 {
+            margin: 0 0 5px;
+            font-size: 15px;
+        }
+
+        .subject-card p {
+            margin: 0;
+            color: rgba(22,24,28,.55);
+            font-size: 12px;
+        }
+
+        .homework-list {
+            display: grid;
+            gap: 11px;
+        }
+
+        .homework-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 13px;
+            background: #fafafd;
+            border: 1px solid #f0f0f4;
+            border-radius: 14px;
+        }
+
+        .check {
+            width: 19px;
+            height: 19px;
+            flex-shrink: 0;
+            border: 1.5px solid #c9cad2;
+            border-radius: 50%;
+        }
+
+        .homework-copy {
+            min-width: 0;
+            flex: 1;
+        }
+
+        .homework-copy strong,
+        .homework-copy span {
+            display: block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .homework-copy strong {
+            font-size: 13px;
+        }
+
+        .homework-copy span {
+            margin-top: 4px;
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .due {
+            white-space: nowrap;
+            font-size: 11px;
+            font-weight: 750;
+        }
+
+        .due-upcoming {
+            color: var(--muted);
+        }
+
+        .due-today {
+            color: var(--warning);
+        }
+
+        .due-overdue {
+            color: var(--danger);
+        }
+
+        .empty {
+            padding: 30px 10px;
+            color: var(--muted);
+            text-align: center;
+            font-size: 13px;
+        }
+
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            display: grid;
+            place-items: center;
+            padding: 20px;
+            background: rgba(22, 23, 30, .3);
+            backdrop-filter: blur(6px);
+            z-index: 10;
+        }
+
+        .modal {
+            width: min(100%, 420px);
+            padding: 27px;
+            background: white;
+            border-radius: 22px;
+            box-shadow: var(--shadow);
+            animation: rise .25s ease both;
+        }
+
+        .modal h2 {
+            margin: 0 0 22px;
+            letter-spacing: -.04em;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 22px;
+        }
+
+        .modal-actions button {
+            flex: 1;
+            padding: 13px;
+            border-radius: 11px;
+            font-weight: 700;
+        }
+
+        .cancel-button {
+            color: #666974;
+            background: var(--surface-soft);
+        }
+
+        .modal .primary-button {
+            width: auto;
+        }
+
+        @keyframes rise {
+            from {
+                opacity: 0;
+                transform: translateY(14px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .sidebar {
+                width: 80px;
+                padding-inline: 10px;
+            }
+
+            .sidebar .brand {
+                justify-content: center;
+                padding: 0;
+            }
+
+            .brand span,
+            .nav button span,
+            .profile-copy,
+            .logout {
+                display: none;
+            }
+
+            .nav button {
+                justify-content: center;
+                padding: 14px 8px;
+            }
+
+            .profile {
+                justify-content: center;
+                padding-inline: 0;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 620px) {
+            .main {
+                padding: 27px 17px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .topbar {
+                display: block;
+            }
+
+            .date {
+                display: inline-block;
+                margin-top: 18px;
+            }
+
+            .subjects {
+                grid-template-columns: 1fr;
+            }
+
+            .auth-card {
+                padding: 30px 23px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+    const API_BASE = "/api/v1";
+    const subjectColors = [
+        { name: "Sage", value: "#879b87" },
+        { name: "Stone", value: "#9b9b91" },
+        { name: "Sand", value: "#b39b78" },
+        { name: "Blue gray", value: "#7f929d" },
+        { name: "Clay", value: "#ae8176" },
+        { name: "Charcoal", value: "#5f6661" }
+    ];
+
+    const defaultSubjects = [
+        { id: 1, name: "Mathematics", color: "#7f929d", homework: 3 },
+        { id: 2, name: "Physics", color: "#b39b78", homework: 2 },
+        { id: 3, name: "Biology", color: "#879b87", homework: 1 },
+        { id: 4, name: "History", color: "#ae8176", homework: 0 }
+    ];
+
+    let subjects = JSON.parse(localStorage.getItem("studly_subjects")) || defaultSubjects;
+    let homework = JSON.parse(localStorage.getItem("studly_homework")) || [
+        { title: "Chapter 4 exercises", subject: "Mathematics", date: "Tomorrow" },
+        { title: "Lab report", subject: "Physics", date: "Friday" },
+        { title: "Read pages 42–58", subject: "Biology", date: "Next week" }
+    ];
+
+    function getTodayDateOnly() {
+        const now = new Date();
+
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, "0");
+        const day = String(now.getDate()).padStart(2, "0");
+
+        return `${year}-${month}-${day}`;
+    }
+
+    function formatDateOnly(dateValue) {
+        const [year, month, day] = dateValue.split("-").map(Number);
+        const date = new Date(year, month - 1, day);
+
+        return new Intl.DateTimeFormat("en", {
+            month: "short",
+            day: "numeric"
+        }).format(date);
+    }
+
+    function getDueStatus(dateValue) {
+        const today = getTodayDateOnly();
+
+        if (dateValue < today) {
+            return "overdue";
+        }
+
+        if (dateValue === today) {
+            return "today";
+        }
+
+        return "upcoming";
+    }
+
+    const app = document.querySelector("#app");
+
+    function initials(name) {
+        return name
+            .split(" ")
+            .map((part) => part[0])
+            .join("")
+            .slice(0, 2)
+            .toUpperCase();
+    }
+
+    function showAuth(mode = "login") {
+        const signup = mode === "signup";
+
+        app.innerHTML = `
+            <main class="auth-screen">
+                <section class="auth-card">
+                    <div class="brand">
+                        <div class="brand-mark">S</div>
+                        <span>studly</span>
+                    </div>
+
+                    <h1>${signup ? "Create your space." : "Welcome back."}</h1>
+                    <p class="auth-subtitle">
+                        ${signup
+            ? "Build better study habits and keep everything in one place."
+            : "Your subjects, homework and progress — all in one calm place."}
+                    </p>
+
+                    <form id="auth-form">
+                        <div id="auth-error" class="error-message hidden"></div>
+
+                        ${signup ? `
+                            <div class="field">
+                                <label for="name">Username</label>
+                                <input id="name" name="name" minlength="4" required placeholder="alexsmith">
+                            </div>
+                        ` : `
+                            <div class="field">
+                                <label for="name">Username</label>
+                                <input id="name" name="name" minlength="4" required placeholder="alexsmith">
+                            </div>
+                        `}
+
+                        ${signup ? `
+                            <div class="field">
+                                <label for="email">Email address</label>
+                                <input id="email" name="email" type="email" required placeholder="you@example.com">
+                            </div>
+                        ` : ""}
+
+                        <div class="field">
+                            <label for="password">Password</label>
+                            <input id="password" name="password" type="password" minlength="6" required placeholder="At least 6 characters">
+                        </div>
+
+                        <button class="primary-button" type="submit">
+                            ${signup ? "Create account" : "Log in"}
+                        </button>
+                    </form>
+
+                    <p class="auth-switch">
+                        ${signup ? "Already have an account?" : "New to Studly?"}
+                        <button id="switch-auth">${signup ? "Log in" : "Create an account"}</button>
+                    </p>
+                </section>
+            </main>
+        `;
+
+        document.querySelector("#switch-auth").onclick = () => showAuth(signup ? "login" : "signup");
+        document.querySelector("#auth-form").onsubmit = (event) => handleAuth(event, signup);
+    }
+
+    async function handleAuth(event, signup) {
+        event.preventDefault();
+
+        const form = new FormData(event.target);
+        const payload = Object.fromEntries(form.entries());
+        const error = document.querySelector("#auth-error");
+        const button = event.target.querySelector("button[type=submit]");
+
+        button.disabled = true;
+        button.textContent = signup ? "Creating account..." : "Signing in...";
+
+        try {
+            const response = await fetch(`${API_BASE}/user/${signup ? "register" : "login"}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.msg || result.message || "Something went wrong");
+            }
+
+            if (signup) {
+                showAuth("login");
+                return;
+            }
+
+            const token = result.data?.token || result.token;
+            localStorage.setItem("studly_token", token || "");
+            localStorage.setItem("studly_user", payload.name);
+            showDashboard();
+        } catch (requestError) {
+            error.textContent = requestError.message;
+            error.classList.remove("hidden");
+            button.disabled = false;
+            button.textContent = signup ? "Create account" : "Log in";
+        }
+    }
+
+    function showDashboard() {
+        const username = localStorage.getItem("studly_user") || "Student";
+        const currentDate = new Intl.DateTimeFormat("en", {
+            weekday: "long",
+            month: "long",
+            day: "numeric"
+        }).format(new Date());
+
+        app.innerHTML = `
+            <main class="dashboard">
+                <aside class="sidebar">
+                    <div class="brand">
+                        <div class="brand-mark">S</div>
+                        <span>studly</span>
+                    </div>
+
+                    <nav class="nav">
+                        <button class="active"><span>⌂</span><span>Overview</span></button>
+                        <button id="subjects-nav"><span>◈</span><span>Subjects</span></button>
+                        <button id="homework-nav"><span>✓</span><span>Homework</span></button>
+                    </nav>
+
+                    <div class="sidebar-footer">
+                        <div class="profile">
+                            <div class="avatar">${initials(username)}</div>
+                            <div class="profile-copy">
+                                <strong>${username}</strong>
+                                <span>Student account</span>
+                            </div>
+                        </div>
+                        <button class="logout" id="logout">↪ &nbsp; Log out</button>
+                    </div>
+                </aside>
+
+                <section class="main">
+                    <header class="topbar">
+                        <div>
+                            <p class="eyebrow">Your overview</p>
+                            <h1>Good morning, ${username}.</h1>
+                            <p>Let’s make today a productive one.</p>
+                        </div>
+                        <div class="date">${currentDate}</div>
+                    </header>
+
+                    <section class="stats">
+                        <article class="stat-card">
+                            <span class="stat-label">Active subjects</span>
+                            <strong class="stat-value">${subjects.length}</strong>
+                            <span class="stat-note">Your current classes</span>
+                        </article>
+                        <article class="stat-card">
+                            <span class="stat-label">Due this week</span>
+                            <strong class="stat-value">${homework.length}</strong>
+                            <span class="stat-note">Keep it moving</span>
+                        </article>
+                        <article class="stat-card">
+                            <span class="stat-label">Completion rate</span>
+                            <strong class="stat-value">78%</strong>
+                            <span class="stat-note">↑ 12% this month</span>
+                        </article>
+                    </section>
+
+                    <section class="content-grid">
+                        <article class="panel">
+                            <div class="panel-header">
+                                <h2>Your subjects</h2>
+                                <button class="text-button" id="add-subject">+ Add subject</button>
+                            </div>
+                            <div id="subjects" class="subjects"></div>
+                        </article>
+
+                        <article class="panel">
+                            <div class="panel-header">
+                                <h2>Upcoming homework</h2>
+                                <button class="text-button" id="add-homework">+ Add task</button>
+                            </div>
+                            <div id="homework" class="homework-list"></div>
+                        </article>
+                    </section>
+                </section>
+            </main>
+        `;
+
+        renderSubjects();
+        renderHomework();
+
+        document.querySelector("#logout").onclick = () => {
+            localStorage.removeItem("studly_token");
+            localStorage.removeItem("studly_user");
+            showAuth();
+        };
+
+        document.querySelector("#add-subject").onclick = () => openModal("subject");
+        document.querySelector("#add-homework").onclick = () => openModal("homework");
+    }
+
+    function renderSubjects() {
+        const container = document.querySelector("#subjects");
+
+        container.innerHTML = subjects.map((subject) => `
+            <article class="subject-card" style="background:${subject.color}18">
+                <div class="subject-icon" style="background:${subject.color}">
+                    ${subject.name.charAt(0).toUpperCase()}
+                </div>
+                <h3>${subject.name}</h3>
+                <p>${subject.homework || 0} homework tasks</p>
+            </article>
+        `).join("");
+    }
+
+    function renderHomework() {
+        const container = document.querySelector("#homework");
+
+        if (!homework.length) {
+            container.innerHTML = `
+            <div class="empty">
+                No upcoming homework. Nice work!
+            </div>
+        `;
+            return;
+        }
+
+        container.innerHTML = homework.map((task) => {
+            const status = getDueStatus(task.date);
+
+            return `
+            <article class="homework-item">
+                <div class="check"></div>
+
+                <div class="homework-copy">
+                    <strong>${task.title}</strong>
+                    <span>${task.subject}</span>
+                </div>
+
+                <span class="due due-${status}">
+                    ${status === "overdue" ? "Overdue · " : ""}
+                    ${status === "today" ? "Today · " : ""}
+                    ${formatDateOnly(task.date)}
+                </span>
+            </article>
+        `;
+        }).join("");
+    }
+
+    function openModal(type) {
+        const isSubject = type === "subject";
+
+        const modalBackdrop = document.createElement("div");
+        modalBackdrop.className = "modal-backdrop";
+        modalBackdrop.innerHTML = `
+<section class="modal">
+    <h2>${isSubject ? "Add a subject" : "Add homework"}</h2>
+
+    <form id="modal-form">
+        <div class="field">
+            <label>${isSubject ? "Subject name" : "Task name"}</label>
+            <input
+                name="name"
+                required
+                placeholder="${isSubject ? "Computer Science" : "Finish chapter notes"}"
+            >
+        </div>
+
+        ${isSubject ? `
+            <div class="field">
+                <label for="subject-color">Subject color</label>
+                <select id="subject-color" name="color" required>
+                    ${subjectColors.map((color) => `
+                        <option value="${color.value}">${color.name}</option>
+                    `).join("")}
+                </select>
+            </div>
+        ` : ""}
+
+        ${!isSubject ? `
+            <div class="field">
+                <label for="homework-subject">Subject</label>
+                <select id="homework-subject" name="subject" required>
+                    ${subjects.map((subject) => `
+                        <option value="${subject.id}">${subject.name}</option>
+                    `).join("")}
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="homework-date">Due date</label>
+                <input
+                    id="homework-date"
+                    name="date"
+                    type="date"
+                    required
+                >
+            </div>
+        ` : ""}
+
+        <div class="modal-actions">
+            <button type="button" class="cancel-button" id="close-modal">
+                Cancel
+            </button>
+            <button type="submit" class="primary-button">
+                Add ${isSubject ? "subject" : "task"}
+            </button>
+        </div>
+    </form>
+</section>
+        `;
+
+        document.body.appendChild(modalBackdrop);
+        document.querySelector("#close-modal").onclick = () => modalBackdrop.remove();
+
+        document.querySelector("#modal-form").onsubmit = async (event) => {
+            event.preventDefault();
+
+            const values = Object.fromEntries(new FormData(event.target).entries());
+            const token = localStorage.getItem("studly_token");
+
+            if (!isSubject && !/^\d{4}-\d{2}-\d{2}$/.test(values.date)) {
+                alert("Please select a valid due date.");
+                return;
+            }
+
+            try {
+                if (isSubject) {
+                    const response = await fetch(`${API_BASE}/subjects/create`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            ...(token ? { Authorization: `Bearer ${token}` } : {})
+                        },
+                        body: JSON.stringify({
+                            name: values.name,
+                            color: values.color
+                        })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error("Could not create subject.");
+                    }
+
+                    subjects.push({
+                        id: Date.now(),
+                        name: values.name,
+                        color: values.color,
+                        homework: 0
+                    });
+
+                    localStorage.setItem(
+                        "studly_subjects",
+                        JSON.stringify(subjects)
+                    );
+                } else {
+                    const selectedSubject = subjects.find(
+                        (subject) => String(subject.id) === String(values.subject)
+                    );
+
+                    const response = await fetch(`${API_BASE}/homework/create`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            ...(token ? { Authorization: `Bearer ${token}` } : {})
+                        },
+                        body: JSON.stringify({
+                            subjectId: selectedSubject?.id,
+                            date: values.date
+                        })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error("Could not create homework.");
+                    }
+
+                    homework.push({
+                        title: values.name,
+                        subject: selectedSubject?.name || "Unknown subject",
+                        date: values.date
+                    });
+
+                    localStorage.setItem(
+                        "studly_homework",
+                        JSON.stringify(homework)
+                    );
+                }
+
+                modalBackdrop.remove();
+                showDashboard();
+            } catch (error) {
+                alert(error.message);
+            }
+        };
+    }
+
+    if (localStorage.getItem("studly_token")) {
+        showDashboard();
+    } else {
+        showAuth();
+    }
+</script>
+</body>
+</html>

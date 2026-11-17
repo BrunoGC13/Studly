@@ -1,6 +1,7 @@
 import pool from "../db/pool.db";
 import {AppError} from "../util/app.error";
 import logger from "../util/logger";
+import {IUser} from "../types/user.types";
 
 async function create(data: any) {
     const { name, color } = data.body;
@@ -19,7 +20,7 @@ async function create(data: any) {
         }
         if (result.rows.length == 0 || result.rows.length > 1) {
             logger.error(result);
-            throw new AppError("Subject already exists!");
+            throw new AppError("Subject already exists!", 409);
         }
 
         return result.rows[0];
@@ -49,7 +50,7 @@ async function remove(data: any) {
     try {
         const result = await pool.query(query, [id, userId]);
         if (result.rowCount == 0 || result.rowCount == null) {
-            throw new AppError("No matching subject found!")
+            throw new AppError("No matching subject found!", 404)
         }
 
         return result.rows[0];
@@ -71,10 +72,25 @@ async function edit(data: any) {
     try {
         const result = await pool.query(query, [name, color, id, userId]);
         if (result.rowCount == 0 || result.rowCount == null) {
-            throw new AppError("No matching subject found!")
+            throw new AppError("No matching subject found!", 404)
         }
 
         return result.rows[0];
+    } catch (err) {
+        logger.error(err);
+        throw new AppError("Internal Server Error", 500);
+    }
+}
+
+async function get(data: any) {
+    const userId = data.userId;
+
+    const query = 'SELECT * FROM subjects WHERE owner = $1';
+    try {
+        const result = await pool.query(query, [userId]);
+        if (result.rowCount == 0 || result.rowCount == null) throw new AppError("No subjects found!", 404);
+
+        return result.rows;
     } catch (err) {
         logger.error(err);
         throw new AppError("Internal Server Error", 500);
@@ -85,4 +101,5 @@ export = {
     create,
     remove,
     edit,
+    get
 }

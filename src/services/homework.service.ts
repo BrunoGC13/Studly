@@ -56,8 +56,24 @@ async function edit(data: any) {
     }
 }
 
+async function get(data: any) {
+    const userId = data.userId;
+
+    const query = 'SELECT * FROM homework WHERE owner = $1';
+    try {
+        const result = await pool.query(query, [userId]);
+        if (result.rowCount == 0 || result.rowCount == null) throw new AppError("No homework found!", 404);
+
+        return result.rows;
+    } catch (err) {
+        logger.error(err);
+        throw new AppError("Internal Server Error", 500);
+    }
+}
+
 export = {
     create,
     remove,
-    edit
+    edit,
+    get
 }
