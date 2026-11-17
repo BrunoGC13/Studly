@@ -2,7 +2,7 @@ import { Router } from "express";
 import { validate } from "../middleware/validate.middleware";
 import { AppError } from "../util/app.error";
 import { resConstructor } from "../util/res.constructor";
-import {SubjectCreationSchema, SubjectRemoveSchema} from "../schemas/subject.schem";
+import {SubjectCreationSchema, SubjectEditSchema, SubjectRemoveSchema} from "../schemas/subject.schem";
 import SubjectService from '../services/subject.service';
 import {authenticateToken} from "../middleware/auth.middleware";
 
@@ -19,7 +19,7 @@ router.post("/create", authenticateToken, validate(SubjectCreationSchema), async
     }));
 })
 
-router.post("/remove", authenticateToken, validate(SubjectRemoveSchema), async (req, res) => {
+router.delete("/remove", authenticateToken, validate(SubjectRemoveSchema), async (req, res) => {
     if (!req.body) {
         throw new AppError("No body provided!", 400);
     }
@@ -30,7 +30,7 @@ router.post("/remove", authenticateToken, validate(SubjectRemoveSchema), async (
     }));
 })
 
-router.post("/edit", authenticateToken, validate(SubjectRemoveSchema), async (req, res) => {
+router.put("/edit", authenticateToken, validate(SubjectEditSchema), async (req, res) => {
     if (!req.body) {
         throw new AppError("No body provided!", 400);
     }

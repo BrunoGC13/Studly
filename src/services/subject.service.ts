@@ -22,7 +22,7 @@ async function create(data: any) {
             throw new AppError("Subject already exists!");
         }
 
-        return result.rows;
+        return result.rows[0];
     } catch (err: any) {
         if (err.code === '23505') {
             throw new AppError("Subject already exists!", 409);
@@ -52,7 +52,7 @@ async function remove(data: any) {
             throw new AppError("No matching subject found!")
         }
 
-        return result.rows;
+        return result.rows[0];
     } catch (err) {
         logger.error(err);
         throw new AppError("Internal Server Error", 500);
@@ -74,7 +74,7 @@ async function edit(data: any) {
             throw new AppError("No matching subject found!")
         }
 
-        return result.rows;
+        return result.rows[0];
     } catch (err) {
         logger.error(err);
         throw new AppError("Internal Server Error", 500);
