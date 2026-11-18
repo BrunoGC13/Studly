@@ -9,7 +9,7 @@ async function create(data: any) {
 
     if (!subjectId || !date) throw new AppError("No data provided!", 400);
 
-    const query = `INSERT INTO homework (owner, subject, dueto) VALUES ($1, $2, $3) RETURNING owner, subject, dueto`;
+    const query = `INSERT INTO homework (owner, subject, dueto) VALUES ($1, $2, $3) RETURNING subject, dueto`;
     try {
         const result = await pool.query(query, [userId, subjectId, date]);
         if (result.rowCount == 0 || result.rowCount == null) throw new AppError("Internal Server Error", 500);
